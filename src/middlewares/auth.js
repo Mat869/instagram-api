@@ -3,7 +3,7 @@ const { cookieName } = require('../config/env/index');
 
 async function auth(req, res, next) {
     const userId = req.cookies[cookieName];
-    if(! userId) {
+    if (!userId) {
         res.sendStatus(403);
         return;
     }
@@ -14,6 +14,7 @@ async function auth(req, res, next) {
         return;
     }
 
+    req.user = user;
     next();
 
 }

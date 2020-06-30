@@ -8,67 +8,70 @@ var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
 
 class Users {
 
-	getAll(req, res) {
-		User.find()
-			.then(users => res.json(users))
-			.catch(err => res.status(500).json(err));
-	}
+    getAll(req, res) {
+        User.find()
+            .then(users => res.json(users))
+            .catch(err => res.status(500).json(err));
+    }
 
-	async check(req, res) {
+    async check(req, res) {
 
-		const { username, email} = req.query;
+        const { username, email } = req.query;
 
-		if( !username && !email) {
-			res.sendStatus(400);
-			return;
-		}
+        if (!username && !email) {
+            res.sendStatus(400);
+            return;
+        }
 
-		let property = username ? 'username' : 'email';
+        let property = username ? 'username' : 'email';
 
-		try {
-			const isExist = await User.exists({
-				[property]: req.query[property]
-			});
-			res.json(isExist);
-		}
-		catch(err) {
-			res.status(400).json(err);
-		}
+        try {
+            const isExist = await User.exists({
+                [property]: req.query[property]
+            });
+            res.json(isExist);
+        } catch (err) {
+            res.status(400).json(err);
+        }
 
-	}
+    }
 
-	async create(req, res) {
-		const newUser = new User(req.body);
-		newUser.password = md5(newUser.password);
-		try {
-			const createdUser = await newUser.save();
-			res.status(201).json(createdUser);
-		} catch(err) {
-			if (err.code === ERROR_DUPLICATE_VALUE) {
-				res.sendStatus(409);
-				return;
-			}
-			res.status(400).json(err);
-		}
-	}
-    
-	async login(req, res) {
+    async create(req, res) {
+        const newUser = new User(req.body);
+        newUser.password = md5(newUser.password);
+        try {
+            const createdUser = await newUser.save();
+            res.status(201).json(createdUser);
+        } catch (err) {
+            if (err.code === ERROR_DUPLICATE_VALUE) {
+                res.sendStatus(409);
+                return;
+            }
+            res.status(400).json(err);
+        }
+    }
+
+    async login(req, res) {
         const credentials = req.body;
-		try {
-			const user = await User.findOne({
-				username: credentials.username,
-				password: md5(credentials.password)
-			});
-			if (!user) {
-				res.sendStatus(401);
-				return;
+        try {
+            const user = await User.findOne({
+                username: credentials.username,
+                password: md5(credentials.password)
+            });
+            if (!user) {
+                res.sendStatus(401);
+                return;
             }
             res.cookie(config.cookieName, user.id, { maxAge: DURATION_60D })
-			res.json(user).send();
-		} catch(err) {
-			res.sendStatus(500);
-		}
-	}
+            res.json(user).send();
+        } catch (err) {
+            res.sendStatus(500);
+        }
+    }
+
+    async me(req, res) { // express has a feature thanks to which the user passess from auth to here, the next, in the req)
+        res.json(req.user).send();
+    }
 
 }
 
