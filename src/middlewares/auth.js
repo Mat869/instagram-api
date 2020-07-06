@@ -1,4 +1,5 @@
 const User = require('../models/user');
+
 const { cookieName } = require('../config/env/index');
 
 async function auth(req, res, next) {
@@ -14,7 +15,7 @@ async function auth(req, res, next) {
         return;
     }
 
-    req.user = user;
+    req.user = user; // express has a feature thanks to which the user passess from auth to here, the next, in the req)
     next();
 
 }

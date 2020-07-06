@@ -69,7 +69,7 @@ class Users {
         }
     }
 
-    async me(req, res) { // express has a feature thanks to which the user passess from auth to here, the next, in the req)
+    async me(req, res) { 
         res.json(req.user).send();
     }
 
