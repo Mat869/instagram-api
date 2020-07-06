@@ -69,8 +69,8 @@ class Users {
         }
     }
 
-    async me(req, res) { 
-        res.json(req.user).send();
+    me(req, res) { 
+        res.json(req.user);
     }
 
 }
