@@ -1,9 +1,21 @@
+const Post = require('../models/post');
 
 class Posts {
 
-    create(req, res) {
-        //const newPost = new Post(req.body);
-        res.sendStatus(200);
+    async create(req, res) {
+        const post = new Post({
+            userId: req.user._id,
+            image: req.file.filename, // according to multer docum
+            description: req.body.description
+        });
+
+        try {
+            const createdPost = await post.save();
+            res.status(201).json(createdPost);
+        } catch(err) {
+            res.status(400).json(err);
+        }
+        
     }
 
 
