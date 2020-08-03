@@ -1,3 +1,3 @@
-const development = require('./development');
+const development = require('./development')
 
 module.exports = development;

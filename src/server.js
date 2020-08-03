@@ -10,7 +10,7 @@ const port = 4000;
 
 app.use(cors({
 	origin: true,
-	credentials: true // for crossdomain cookies
+	credentials: true
 }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -27,7 +27,8 @@ function listen() {
 function connect() {
 	mongoose.connect(config.dbUrl, {
 		useNewUrlParser: true,
-		useUnifiedTopology: true
+		useUnifiedTopology: true,
+		useFindAndModify: false
 	});
 	const db = mongoose.connection;
 	db.on('error', err => console.log(err));

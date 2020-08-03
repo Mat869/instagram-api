@@ -1,4 +1,5 @@
 module.exports = {
-    cookieName: 'ins_user',
-    dbUrl: 'mongodb://localhost:27017/instagram'
+	cookieName: 'ins_user',
+	secret: '87hbwwefjq',
+	dbUrl: 'mongodb://localhost:27017/instagram'
 };

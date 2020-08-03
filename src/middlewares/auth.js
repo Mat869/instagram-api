@@ -1,23 +1,25 @@
 const User = require('../models/user');
-
-const { cookieName } = require('../config/env/index');
+const jwt = require('jsonwebtoken');
+const { cookieName, secret } = require('../config/env/index');
 
 async function auth(req, res, next) {
-    const userId = req.cookies[cookieName];
-    if (!userId) {
+    const token = req.cookies[cookieName];
+    if (!token) {
         res.sendStatus(403);
         return;
     }
-
-    const user = await User.findById(userId);
-    if (!user) {
+    try {
+        const payload = jwt.verify(token, secret);
+        const user = await User.findById(payload.id);
+        if (!user) {
+            res.sendStatus(403);
+            return;
+        }
+        req.user = user;
+        next();
+    } catch (err) {
+        console.log(err);
         res.sendStatus(403);
-        return;
     }
-
-    req.user = user; // express has a feature thanks to which the user passess from auth to here, the next, in the req)
-    next();
-
 }
-
 module.exports = auth;

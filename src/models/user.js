@@ -15,6 +15,7 @@ const User = new mongoose.model('User', {
 		required: true,
 		unique: true
 	},
+	bio: String,
 	avatar: String,
 	createdAt: {
 		type: Date,
